@@ -60,14 +60,14 @@ The rest of this document describes the bigloo-csv application programming inter
 
 
 @defun read-csv-record input-port [custom-lexer]
-@code{read-csv-record} has one  required argument, the input-port of the csv data to parse, and an optional argument indicating the lexer to use, by default the lexer supporting standard csv files. It returns a single record, as a list, or @code{#eof-object}.
+@code{read-csv-record} has one  required argument, the input-port of the csv data to parse, and an optional argument indicating the lexer to use, by default the lexer supporting standard csv files. It returns a single record, as a list, or @code{#eof-object}. Upon error, it will throw an @code{&invalid-port-error} or @code{&io-parse-error} exception.
 @end defun  
 
 @node read-csv-records, csv-for-each, read-csv-record ,API Reference
 @comment node-name, next,          previous, up
 
 @defun read-csv-records input-port [custom-lexer]
-@code{read-csv-records} has one  required argument, the input-port of the csv data to parse, and an optional argument indicating the lexer to use, by default the lexer supporting standard csv files. It returns all of the records, as a list of lists, or @code{#eof-object}.
+@code{read-csv-records} has one  required argument, the input-port of the csv data to parse, and an optional argument indicating the lexer to use, by default the lexer supporting standard csv files. It returns all of the records, as a list of lists, or @code{#eof-object}. Upon error, it will throw an @code{&invalid-port-error} or @code{&io-parse-error exception}.
 @end defun  
 
 
@@ -75,14 +75,14 @@ The rest of this document describes the bigloo-csv application programming inter
 @comment node-name, next,          previous, up
 
 @defun csv-for-each proc input-port [custom-lexer]
-@code{csv-for-each} has two required arguments, a procedure to apply to each record and the input-port of the csv data to parse, and an optional argument indicating the lexer to use, by default the lexer supporting standard csv files. It returns @code{#unspecified}.
+@code{csv-for-each} has two required arguments, a procedure to apply to each record and the input-port of the csv data to parse, and an optional argument indicating the lexer to use, by default the lexer supporting standard csv files. It returns @code{#unspecified}. Upon error, it will throw an @code{&invalid-port-error} or @code{&io-parse-error exception}.
 @end defun  
 
 @node    csv-map,make-csv-lexer,csv-for-each, API Reference
 @comment node-name, next,          previous, up
 
 @defun csv-map proc input-port [custom-lexer]
-@code{csv-map} has two required arguments, a procedure to apply to each record and the input-port of the csv data to parse, and an optional argument indicating the lexer to use, by default the lexer supporting standard csv files. It returnsthe results of applying @code{proc} to each record as a list.
+@code{csv-map} has two required arguments, a procedure to apply to each record and the input-port of the csv data to parse, and an optional argument indicating the lexer to use, by default the lexer supporting standard csv files. It returnsthe results of applying @code{proc} to each record as a list. Upon error, it will throw an @code{&invalid-port-error} or @code{&io-parse-error} exception.
 @end defun  
 
 

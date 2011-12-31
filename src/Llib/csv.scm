@@ -1,3 +1,19 @@
+;;;; Copyright(c) 2011 Joseph Donaldson(donaldsonjw@yahoo.com) 
+;;;; This file is part of bigloo-csv.
+;;;;
+;;;;     bigloo-csv is free software: you can redistribute it and/or modify
+;;;;     it under the terms of the GNU Lesser General Public License as
+;;;;     published by the Free Software Foundation, either version 3 of the
+;;;;     License, or (at your option) any later version.
+;;;;
+;;;;     bigloo-csv is distributed in the hope that it will be useful, but
+;;;;     WITHOUT ANY WARRANTY; without even the implied warranty of
+;;;;     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;;;;     Lesser General Public License for more details.
+;;;;
+;;;;     You should have received a copy of the GNU Lesser General Public
+;;;;     License along with bigloo-csv.  If not, see
+;;;;     <http://www.gnu.org/licenses/>.
 (module csv
    (export +csv-lexer+
 	   +tsv-lexer+
@@ -85,12 +101,16 @@
    
 ;;; 
 (define (read-csv-record in #!optional (lexer +csv-lexer+))
-   (let ((pc (peek-char in)))
-      (if (eof-object? pc)
-	  pc
-	  (read/lalrp +csv-parser+ lexer in
-	     (lambda (x) (or (eof-object? x)
-			     (eq? x 'newline)))))))
+   (if (input-port? in)
+       (let ((pc (peek-char in)))
+	  (if (eof-object? pc)
+	      pc
+	      (read/lalrp +csv-parser+ lexer in
+		 (lambda (x) (or (eof-object? x)
+				 (eq? x 'newline))))))
+       (raise (instantiate::&io-port-error (proc "read-csv-record")
+					   (msg "invalid input port")
+					   (obj in)))))
 
 (define (read-csv-records in #!optional (lexer +csv-lexer+))
    (let loop ((curr (read-csv-record in lexer))

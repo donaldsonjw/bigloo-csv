@@ -275,3 +275,29 @@
 		     '(("DOG" "CAT")("HORSE" "PIG"))))))
 
 
+(define-test unclosed-quote
+   (let* ((test-string "dog,cat,\"horse")
+		(in (open-input-string test-string)))
+      (with-handler (lambda (e)
+		       (if (isa? e &io-parse-error) 
+			   #t #f))
+		    (unwind-protect
+		       (read-csv-record in)
+		       (close-input-port in))))
+   :result (lambda (v)
+	      (if (eq? v 'result)
+		  "an &io-parse-error exception"
+		  (eq? v #t))))
+
+(define-test invalid-input-port
+   (with-handler (lambda (e)
+		    (if (isa? e &io-port-error)
+		    #t #f))
+		 (let* ((in #unspecified))
+		    (read-csv-record in)))
+   :result (lambda (v)
+	      (if (eq? v 'result)
+		  "an &io-port-error exception"
+		  (eq? v #t))))
+      
+
