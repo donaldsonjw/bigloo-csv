@@ -52,6 +52,7 @@
 	       (cons 'text (the-string)))
 	      (else 
 	       (let ((c (the-failure)))
+		  (set! in-quote? #f)
 		  (if (eof-object? c)
 		      c
 		      (error 'csv-lexer "Illegal character" c))))))
@@ -82,6 +83,8 @@
 	  escaped))
       
       (escaped
+	 ((kwote kwote)
+	  "")
 	 ((kwote edata kwote)
 	  edata))
 

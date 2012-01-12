@@ -299,5 +299,30 @@
 	      (if (eq? v 'result)
 		  "an &io-port-error exception"
 		  (eq? v #t))))
+
+
+(define-test quoted-empty-field
+   (let* ((test-string "\"\",\"\",\"\"")
+	  (in (open-input-string test-string)))
+       (unwind-protect
+	 (read-csv-record in)
+	 (close-input-port in)))
+   :result (lambda (v)
+	      (if (eq? v 'result)
+		  "a list of three empty strings"
+		  (equal? v (list "" "" "")))))
+
+
+
+(define-test custom-quoted-empty-field
+   (let* ((test-string "$$#$$#$$")
+	  (in (open-input-string test-string)))
+       (unwind-protect
+	 (read-csv-record in +psv2-lexer+)
+	 (close-input-port in)))
+   :result (lambda (v)
+	      (if (eq? v 'result)
+		  "a list of three empty strings"
+		  (equal? v (list "" "" "")))))
       
 
