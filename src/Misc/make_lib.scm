@@ -1,4 +1,4 @@
-;;;; Copyright(c) 2011 Joseph Donaldson(donaldsonjw@yahoo.com) 
+;;;; Copyright(c) 2011, 2012 Joseph Donaldson(donaldsonjw@yahoo.com) 
 ;;;; This file is part of bigloo-csv.
 ;;;;
 ;;;;     bigloo-csv is free software: you can redistribute it and/or modify

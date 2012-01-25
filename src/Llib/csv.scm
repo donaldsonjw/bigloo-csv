@@ -1,4 +1,4 @@
-;;;; Copyright(c) 2011 Joseph Donaldson(donaldsonjw@yahoo.com) 
+;;;; Copyright(c) 2011, 2012 Joseph Donaldson(donaldsonjw@yahoo.com) 
 ;;;; This file is part of bigloo-csv.
 ;;;;
 ;;;;     bigloo-csv is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@
 (define-macro (make-csv-lexer sep quot)
    (if (and (char? sep)
 	    (char? quot))
-       `(let ((in-quote? #f))
+       `(lambda (in-quote?)
 	   (regular-grammar ((quote ,quot)
 			     (separator ,sep))
 	      ((when in-quote?
@@ -108,7 +108,7 @@
        (let ((pc (peek-char in)))
 	  (if (eof-object? pc)
 	      pc
-	      (read/lalrp +csv-parser+ lexer in
+	      (read/lalrp +csv-parser+ (lexer #f) in
 		 (lambda (x) (or (eof-object? x)
 				 (eq? x 'newline))))))
        (raise (instantiate::&io-port-error (proc "read-csv-record")
