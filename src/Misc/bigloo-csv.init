@@ -29,7 +29,9 @@
 		 (begin
 		    (set! in-quote? (not in-quote?))
 		    (cons 'kwote (the-string))))
-	      
+	      ((when (not in-quote?)
+		  (+ (or #\space #\tab)))
+		  (cons 'space (the-string)))
 	      (separator
 		 'separator)
 	      ((or (: #\return #\newline)

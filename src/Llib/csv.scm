@@ -38,7 +38,9 @@
 		 (begin
 		    (set! in-quote? (not in-quote?))
 		    (cons 'kwote (the-string))))
-	      
+	      ((when (not in-quote?)
+		  (+ (or #\space #\tab)))
+		  (cons 'space (the-string)))
 	      (separator
 		 'separator)
 	      ((or (: #\return #\newline)
@@ -67,27 +69,51 @@
 
 
 (define +csv-parser+
-   (lalr-grammar (kwote 2quote separator newline text)
+   (lalr-grammar (kwote 2quote space separator newline text)
       (fields
 	 ((field)
 	  (list field))
 	 ((field separator fields)
 	  (cons field fields)))
-
+      
       (field
 	 (()
 	  "")
-	 ((text)
-	  text)
-	 ((escaped)
+	 ((possible-space@a text possible-space@b)
+	  (string-append a text b))
+	 ((possible-space@a escaped possible-space@b)
 	  escaped))
+	 
+      (possible-space
+	 (()
+	  "")
+	 ((space)
+	    space))
       
       (escaped
 	 ((kwote kwote)
 	  "")
 	 ((kwote edata kwote)
 	  edata))
+      
+      ; (escaped
+      ; 	 ((possible-space+kwote kwote+possible-space)
+      ; 	  "")
+      ; 	 ((possible-space+kwote edata kwote+possible-space)
+      ; 	  edata))
 
+      ; (possible-space+kwote
+      ; 	 ((kwote)
+      ; 	  kwote)
+      ; 	 ((space kwote)
+      ; 	  kwote))
+      ; (kwote+possible-space
+      ; 	 ((kwote)
+      ; 	  kwote)
+      ; 	 ((kwote space)
+      ; 	  kwote))
+	    
+   
       (edata
 	 ((edatum)
 	  edatum)

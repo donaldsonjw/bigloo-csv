@@ -324,5 +324,51 @@
 	      (if (eq? v 'result)
 		  "a list of three empty strings"
 		  (equal? v (list "" "" "")))))
-      
+
+(define-test space-in-fields-without-quotes
+   (let* ((test-string "dog , cat ,pig")
+	  (in (open-input-string test-string)))
+      (unwind-protect
+	 (read-csv-record in)
+	 (close-input-port in)))
+   :result (lambda (v)
+	      (if (eq? v 'result)
+		  '("dog " " cat " "pig")
+		  (csv-record=? v '("dog " " cat " "pig")))))
+
+(define-test space-after-sep-and-before-quote
+   (let* ((test-string "\"dog\", \"cat\"")
+	  (in (open-input-string test-string)))
+      (unwind-protect
+	 (read-csv-record in)
+	 (close-input-port in)))
+   :result (lambda (v)
+	      (if (eq? v 'result)
+		  '("dog" "cat")
+		  (csv-record=? v '("dog" "cat")))))
+
+
+(define-test space-after-quote-before-sep
+   (let* ((test-string "\"dog\" ,\"cat\"")
+	  (in (open-input-string test-string)))
+      (unwind-protect
+	 (read-csv-record in)
+	 (close-input-port in)))
+   :result (lambda (v)
+	      (if (eq? v 'result)
+		  '("dog" "cat")
+		  (csv-record=? v '("dog" "cat")))))
+
+(define-test quotes-with-spaces-around-sep
+   (let* ((test-string "\"dog\" , \"cat\"")
+	  (in (open-input-string test-string)))
+      (unwind-protect
+	 (read-csv-record in)
+	 (close-input-port in)))
+   :result (lambda (v)
+	      (if (eq? v 'result)
+		  '("dog" "cat")
+		  (csv-record=? v '("dog" "cat")))))
+
+
 
