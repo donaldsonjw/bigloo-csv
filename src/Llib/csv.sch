@@ -14,7 +14,7 @@
 ;;;;     You should have received a copy of the GNU Lesser General Public
 ;;;;     License along with bigloo-csv.  If not, see
 ;;;;     <http://www.gnu.org/licenses/>.
- 
+
 
 (define-macro (make-csv-lexer sep quot)
    (if (and (char? sep)
@@ -49,12 +49,3 @@
 		      c
 		      (error 'csv-lexer "Illegal character" c))))))
        (error 'csv-lexer "separator and quote must be a single character" (list sep quot))))
-
-
-
-(declare-library! 'bigloo-csv 
-   :version "0.9"
-   :srfi '(bigloo-csv)
-   :basename "bigloo-csv"
-   :module-eval '__bigloo_csv_make_lib)
-

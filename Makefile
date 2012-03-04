@@ -22,9 +22,9 @@ INSTBIGLOOLIBDIR = $(INSTLIBDIR)/bigloo/$(BIGLOO_VERSION)
 VERSION = 0.9
 
 #Bigloo Flags
-BHEAPFLAGS = -unsafe -q -mkaddheap -mkaddlib -v2 -heap-library $(LIBNAME)
+BHEAPFLAGS = -I src/Llib -unsafe -q -mkaddheap -mkaddlib -v2 -heap-library $(LIBNAME)
 
-BCOMMONFLAGS = -mkaddlib -fsharing -q \
+BCOMMONFLAGS = -mkaddlib -fsharing -q -I src/Llib \
                -copt '$(CCOMMONFLAGS)'
 
 BSAFEFLAGS = $(BCOMMONFLAGS) -cg -O3 -g 
@@ -97,8 +97,10 @@ lib: init heap lib_s lib_u lib_s.a lib_u.a lib_es lib_eu
 
 init: $(DISTDIR)/bigloo-csv.init
 
-$(DISTDIR)/bigloo-csv.init : src/Misc/bigloo-csv.init $(DISTDIR)
-	cp $< $(DISTDIR)/
+$(DISTDIR)/bigloo-csv.init : src/Misc/bigloo-csv.init.in $(DISTDIR)
+	echo ";; automatically generated. Don't edit" > $@; \
+	cat src/Llib/csv.sch >> $@; \
+	cat $< >> $@;
 
 
 lib_s: $(OBJDIR) $(DISTDIR) $(SAFEOBJECTS)

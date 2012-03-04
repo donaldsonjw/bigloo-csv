@@ -15,6 +15,7 @@
 ;;;;     License along with bigloo-csv.  If not, see
 ;;;;     <http://www.gnu.org/licenses/>.
 (module csv
+   (include "csv.sch")
    (export +csv-lexer+
 	   +tsv-lexer+
 	   +psv-lexer+
@@ -23,42 +24,6 @@
 	   (csv-for-each proc in #!optional (lexer +csv-lexer+))
 	   (csv-map proc in #!optional (lexer +csv-lexer+))))
 
-
-
-(define-macro (make-csv-lexer sep quot)
-   (if (and (char? sep)
-	    (char? quot))
-       `(lambda (in-quote?)
-	   (regular-grammar ((quote ,quot)
-			     (separator ,sep))
-	      ((when in-quote?
-		  (: quote quote))
-	       (cons '2quote (string ,quot)))
-	      (quote
-		 (begin
-		    (set! in-quote? (not in-quote?))
-		    (cons 'kwote (the-string))))
-	      ((when (not in-quote?)
-		  (+ (or #\space #\tab)))
-		  (cons 'space (the-string)))
-	      (separator
-		 'separator)
-	      ((or (: #\return #\newline)
-		   #\newline)
-	       'newline)
-	      ((when (not in-quote?)
-		  (+ (out quote separator #\return #\newline)))
-	       (cons 'text (the-string)))
-	      ((when in-quote?
-		  (+ (out quote)))
-	       (cons 'text (the-string)))
-	      (else 
-	       (let ((c (the-failure)))
-		  (set! in-quote? #f)
-		  (if (eof-object? c)
-		      c
-		      (error 'csv-lexer "Illegal character" c))))))
-       (error 'csv-lexer "separator and quote must be a single character" (list sep quot))))
 
 
 (define +csv-lexer+ (make-csv-lexer #\, #\"))
