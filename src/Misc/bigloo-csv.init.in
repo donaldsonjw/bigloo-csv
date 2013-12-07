@@ -1,0 +1,7 @@
+ 
+(declare-library! 'bigloo-csv 
+   :version "0.9"
+   :srfi '(bigloo-csv)
+   :basename "bigloo-csv"
+   :module-eval '__bigloo_csv_make_lib)
+
