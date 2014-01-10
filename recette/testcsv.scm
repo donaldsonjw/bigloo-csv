@@ -376,4 +376,43 @@
 		  (csv-record=? v '("dog" "cat")))))
 
 
+(define-test tab-separated
+   (let* ((test-string "\"dog\" \t \"cat\"")
+	  (in (open-input-string test-string)))
+      (unwind-protect
+	 (read-csv-record in +tsv-lexer+)
+	 (close-input-port in)))
+      :result (lambda (v)
+		 (if (eq? v 'result)
+		     '("dog" "cat")
+		     (csv-record=? v '("dog" "cat")))))
+
+(define +ssv-lexer+ (make-csv-lexer #\space #\"))
+
+(define-test space-separated
+   (let* ((test-string "\"dog\"\t \t\"cat\"")
+	  (in (open-input-string test-string)))
+      (unwind-protect
+	 (read-csv-record in +ssv-lexer+)
+	 (close-input-port in)))
+      :result (lambda (v)
+		 (if (eq? v 'result)
+		     '("dog" "cat")
+		     (csv-record=? v '("dog" "cat")))))
+
+
+(define +ssv-w/tabquot-lexer+ (make-csv-lexer #\space #\tab))
+
+
+(define-test space-separated-w/-tab-quote
+   (let* ((test-string "\tdog\t \tcat\t")
+	  (in (open-input-string test-string)))
+      (unwind-protect
+	 (read-csv-record in +ssv-w/tabquot-lexer+)
+	 (close-input-port in)))
+      :result (lambda (v)
+		 (if (eq? v 'result)
+		     '("dog" "cat")
+		     (csv-record=? v '("dog" "cat")))))
+
 
