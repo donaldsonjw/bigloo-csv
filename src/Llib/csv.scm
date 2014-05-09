@@ -1,4 +1,4 @@
-;;;; Copyright(c) 2011, 2012 Joseph Donaldson(donaldsonjw@yahoo.com) 
+;;;; Copyright(c) 2011-2014 Joseph Donaldson(donaldsonjw@yahoo.com) 
 ;;;; This file is part of bigloo-csv.
 ;;;;
 ;;;;     bigloo-csv is free software: you can redistribute it and/or modify
@@ -44,11 +44,19 @@
       (field
 	 (()
 	  "")
+	  ((spaces)
+	   "")
 	 ((possible-space@a text possible-space@b)
 	  (string-append a text b))
 	 ((possible-space@a escaped possible-space@b)
 	  escaped))
-	 
+
+      (spaces
+	 ((space)
+	  "")
+	 ((spaces space)
+	  ""))
+      
       (possible-space
 	 (()
 	  "")
