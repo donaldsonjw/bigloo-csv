@@ -349,8 +349,8 @@
 	 (close-input-port in)))
    :result (lambda (v)
 	      (if (eq? v 'result)
-		  '("dog" "cat")
-		  (csv-record=? v '("dog" "cat")))))
+		  '("dog" " cat")
+		  (csv-record=? v '("dog" " cat")))))
 
 
 (define-test space-after-quote-before-sep
@@ -361,8 +361,8 @@
 	 (close-input-port in)))
    :result (lambda (v)
 	      (if (eq? v 'result)
-		  '("dog" "cat")
-		  (csv-record=? v '("dog" "cat")))))
+		  '("dog " "cat")
+		  (csv-record=? v '("dog " "cat")))))
 
 (define-test quotes-with-spaces-around-sep
    (let* ((test-string "\"dog\" , \"cat\"")
@@ -372,8 +372,8 @@
 	 (close-input-port in)))
    :result (lambda (v)
 	      (if (eq? v 'result)
-		  '("dog" "cat")
-		  (csv-record=? v '("dog" "cat")))))
+		  '("dog " " cat")
+		  (csv-record=? v '("dog " " cat")))))
 
 
 (define-test tab-separated
@@ -384,8 +384,8 @@
 	 (close-input-port in)))
       :result (lambda (v)
 		 (if (eq? v 'result)
-		     '("dog" "cat")
-		     (csv-record=? v '("dog" "cat")))))
+		     '("dog " " cat")
+		     (csv-record=? v '("dog " " cat")))))
 
 (define +ssv-lexer+ (make-csv-lexer #\space #\"))
 
@@ -397,8 +397,8 @@
 	 (close-input-port in)))
       :result (lambda (v)
 		 (if (eq? v 'result)
-		     '("dog" "cat")
-		     (csv-record=? v '("dog" "cat")))))
+		     '("dog\t" "\tcat")
+		     (csv-record=? v '("dog\t" "\tcat")))))
 
 
 (define +ssv-w/tabquot-lexer+ (make-csv-lexer #\space #\tab))
@@ -424,5 +424,5 @@
 	 (close-input-port in)))
       :result (lambda (v)
 		 (if (eq? v 'result)
-		     '("pink" "dog" ""  "cat")
-		     (csv-record=? v '("pink" "dog" "" "cat")))))
+		     '("pink" "dog" "                 "  "cat")
+		     (csv-record=? v '("pink" "dog" "                 " "cat")))))
