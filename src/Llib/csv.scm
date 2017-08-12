@@ -25,42 +25,43 @@
 	   (csv-map proc in #!optional (lexer +csv-lexer+))))
 
 
-
 (define +csv-lexer+ (make-csv-lexer #\, #\"))
 
 (define +tsv-lexer+ (make-csv-lexer #\tab #\"))
 
 (define +psv-lexer+ (make-csv-lexer #\| #\"))
 
+(define +csv-unspecified+ '(#unspecified))
 
-(define +csv-parser+
-   (lalr-grammar (separator text)
-      (fields
-	 ((field)
-	  (list field))
-	 ((field separator fields)
-	  (cons field fields)))
-      
-      (field
-	 (()
-	  "")
-	 ((text field)
-	  (string-append text field)))      
-     ))
-		 
-	 
-   
 (define (read-csv-record in #!optional (lexer +csv-lexer+))
-   (if (input-port? in)
-       (let ((pc (peek-char in)))
-	  (if (eof-object? pc)
-	      pc
-	      (read/lalrp +csv-parser+ lexer in
-		 (lambda (x) (or (eof-object? x)
-				 (eq? x 'newline))))))
-       (raise (instantiate::&io-port-error (proc "read-csv-record")
-					   (msg "invalid input port")
-					   (obj in)))))
+   (when (not (input-port? in))
+      (raise (instantiate::&io-port-error (proc "read-csv-record")
+                                          (msg "invalid input port")
+                                          (obj in))))
+   (let loop ((token (read/rp lexer in))
+              (last-token +csv-unspecified+)
+              (res '()))
+      (cond ((or (eq? token 'newline)
+                 (eof-object? token))
+             (if (and (eof-object? token)
+                      (eq? last-token +csv-unspecified+))
+                 #eof-object
+                  (reverse! res)))
+            ((and (pair? token)
+                  (eq? (car token) 'text))
+             (loop (read/rp lexer in)
+                (car token)
+                (if (eq? last-token 'text)
+                    (cons (string-append (car res) (cdr token)) (cdr res))
+                    (cons (cdr token) res))))
+            ((eq? token 'separator)
+             (loop (read/rp lexer in)
+                'separator
+                res))
+            (else
+             (loop (read/rp lexer in)
+                'text
+                res)))))
 
 (define (read-csv-records in #!optional (lexer +csv-lexer+))
    (let loop ((curr (read-csv-record in lexer))

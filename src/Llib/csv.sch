@@ -23,7 +23,7 @@
 			  (separator ,sep))
 	   (quote
 	    (let loop ((curr (read-char (the-port)))
-		       (res ""))
+		       (res '()))
 	       (cond ((eof-object? curr)
 		      (raise (instantiate::&io-parse-error (proc "lexer")
 							   (msg "failed to parse fail")
@@ -33,12 +33,12 @@
 			   (char=? (peek-char (the-port)) ,quot))
 		      (read-char (the-port))
 		      (loop (read-char (the-port))
-			 (string-append res (string ,quot))))
+			 (cons ,quot res)))
 		     ((char=? curr ,quot)
-		      (cons 'text res))
+		      (cons 'text  (list->string (reverse! res))))
 		     (else
 		      (loop (read-char (the-port))
-			    (string-append res (string curr)))))))
+			    (cons curr res))))))
 	   (separator
 	    'separator)
 	   ((or (: #\return #\newline)

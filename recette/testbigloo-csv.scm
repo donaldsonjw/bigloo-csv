@@ -160,8 +160,8 @@
 	 (close-input-port in)))
    :result (lambda (v)
 	      (if (eq? v 'result)
-		  '("")
-		  (csv-record=? v '("")))))
+		  '()
+		  (csv-record=? v '()))))
 
 (define-test empty
    (let* ((test-string "")
@@ -426,3 +426,6 @@
 		 (if (eq? v 'result)
 		     '("pink" "dog" "                 "  "cat")
 		     (csv-record=? v '("pink" "dog" "                 " "cat")))))
+
+
+

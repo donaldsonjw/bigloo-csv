@@ -28,7 +28,7 @@ BHEAPFLAGS = -I src/Llib -unsafe -q -mkaddheap -mkaddlib \
 BCOMMONFLAGS = -mkaddlib -fsharing -q \
                -copt '$(CCOMMONFLAGS)' -I src/Llib
 
-BSAFEFLAGS = $(BCOMMONFLAGS) -cg -O6 
+BSAFEFLAGS = $(BCOMMONFLAGS) -O6 
 
 BUNSAFEFLAGS = $(BCOMMONFLAGS) -O6 -unsafe
 
