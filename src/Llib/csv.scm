@@ -57,7 +57,9 @@
             ((eq? token 'separator)
              (loop (read/rp lexer in)
                 'separator
-                res))
+                (if (eq? last-token 'separator)
+                    (cons "" res)
+                    res)))
             (else
              (loop (read/rp lexer in)
                 'text
